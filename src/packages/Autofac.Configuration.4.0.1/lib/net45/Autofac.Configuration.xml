@@ -1,0 +1,902 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Autofac.Configuration</name>
+    </assembly>
+    <members>
+        <member name="T:Autofac.Configuration.ConfigurationModule">
+            <summary>
+            Module for configuration parsing and registration.
+            </summary>
+        </member>
+        <member name="M:Autofac.Configuration.ConfigurationModule.#ctor(Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Autofac.Configuration.ConfigurationModule"/> class.
+            </summary>
+            <param name="configuration">
+            An <see cref="T:Microsoft.Extensions.Configuration.IConfiguration"/> containing the definition for
+            modules and components to register with the container.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="configuration"/> is <see langword="null"/>.
+            </exception>
+        </member>
+        <member name="P:Autofac.Configuration.ConfigurationModule.Configuration">
+            <summary>
+            Gets the configuration to register.
+            </summary>
+            <value>
+            An <see cref="T:Microsoft.Extensions.Configuration.IConfiguration"/> containing the definition for
+            modules and components to register with the container.
+            </value>
+        </member>
+        <member name="P:Autofac.Configuration.ConfigurationModule.ConfigurationRegistrar">
+            <summary>
+            Gets or sets the configuration registrar.
+            </summary>
+            <value>
+            An <see cref="T:Autofac.Configuration.IConfigurationRegistrar"/> that will be used as the
+            strategy for converting the <see cref="P:Autofac.Configuration.ConfigurationModule.Configuration"/>
+            into component registrations. If this value is <see langword="null" />, the registrar
+            will be a <see cref="T:Autofac.Configuration.Core.ConfigurationRegistrar"/>.
+            </value>
+        </member>
+        <member name="M:Autofac.Configuration.ConfigurationModule.Load(Autofac.ContainerBuilder)">
+            <summary>
+            Executes the conversion of configuration data into component registrations.
+            </summary>
+            <param name="builder">
+            The <see cref="T:Autofac.ContainerBuilder"/> into which registrations will be placed.
+            </param>
+            <remarks>
+            <para>
+            This override uses the <see cref="P:Autofac.Configuration.ConfigurationModule.ConfigurationRegistrar"/>
+            to convert the <see cref="P:Autofac.Configuration.ConfigurationModule.Configuration"/>
+            into component registrations in the provided <paramref name="builder" />.
+            </para>
+            <para>
+            If no specific <see cref="P:Autofac.Configuration.ConfigurationModule.ConfigurationRegistrar"/>
+            is set, the default <see cref="T:Autofac.Configuration.Core.ConfigurationRegistrar"/> type will be used.
+            </para>
+            </remarks>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="builder" /> is <see langword="null" />.
+            </exception>
+        </member>
+        <member name="T:Autofac.Configuration.IComponentRegistrar">
+            <summary>
+            Defines a registration mechanism that converts configuration data
+            into Autofac component registrations.
+            </summary>
+            <seealso cref="T:Autofac.Configuration.Core.ComponentRegistrar"/>
+        </member>
+        <member name="M:Autofac.Configuration.IComponentRegistrar.RegisterConfiguredComponents(Autofac.ContainerBuilder,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            Registers individual configured components into a container builder.
+            </summary>
+            <param name="builder">
+            The <see cref="T:Autofac.ContainerBuilder"/> that should receive the configured registrations.
+            </param>
+            <param name="configuration">
+            The <see cref="T:Microsoft.Extensions.Configuration.IConfiguration"/> containing the configured registrations.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="builder"/> or <paramref name="configuration"/> is <see langword="null"/>.
+            </exception>
+            <exception cref="T:System.InvalidOperationException">
+            Thrown if there is any issue in parsing the component configuration into registrations.
+            </exception>
+            <remarks>
+            <para>
+            Implementations of this method are responsible for adding components
+            to the container by parsing configuration model data and executing
+            the registration logic.
+            </para>
+            </remarks>
+        </member>
+        <member name="T:Autofac.Configuration.IConfigurationRegistrar">
+            <summary>
+            A service for adding configured registrations to a container.
+            </summary>
+        </member>
+        <member name="M:Autofac.Configuration.IConfigurationRegistrar.RegisterConfiguration(Autofac.ContainerBuilder,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            Registers the contents of a configuration object into a container builder.
+            </summary>
+            <param name="builder">
+            The <see cref="T:Autofac.ContainerBuilder"/> that should receive the configured registrations.
+            </param>
+            <param name="configuration">
+            The <see cref="T:Microsoft.Extensions.Configuration.IConfiguration"/> containing the configured registrations.
+            </param>
+        </member>
+        <member name="T:Autofac.Configuration.IModuleRegistrar">
+            <summary>
+            Defines a registration mechanism that converts configuration data
+            into Autofac module registrations.
+            </summary>
+            <seealso cref="T:Autofac.Configuration.Core.ModuleRegistrar"/>
+        </member>
+        <member name="M:Autofac.Configuration.IModuleRegistrar.RegisterConfiguredModules(Autofac.ContainerBuilder,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            Registers individual configured modules into a container builder.
+            </summary>
+            <param name="builder">
+            The <see cref="T:Autofac.ContainerBuilder"/> that should receive the configured registrations.
+            </param>
+            <param name="configuration">
+            The <see cref="T:Microsoft.Extensions.Configuration.IConfiguration"/> containing the configured registrations.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="builder"/> or <paramref name="configuration"/> is <see langword="null"/>.
+            </exception>
+            <exception cref="T:System.InvalidOperationException">
+            Thrown if there is any issue in parsing the module configuration into registrations.
+            </exception>
+            <remarks>
+            <para>
+            Implementations of this method are responsible for adding modules
+            to the container by parsing configuration model data and executing
+            the registration logic.
+            </para>
+            </remarks>
+        </member>
+        <member name="T:Autofac.Configuration.Core.ComponentRegistrar">
+            <summary>
+            Default component configuration processor.
+            </summary>
+            <seealso cref="T:Autofac.Configuration.IComponentRegistrar"/>
+        </member>
+        <member name="M:Autofac.Configuration.Core.ComponentRegistrar.RegisterConfiguredComponents(Autofac.ContainerBuilder,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            Registers individual configured components into a container builder.
+            </summary>
+            <param name="builder">
+            The <see cref="T:Autofac.ContainerBuilder"/> that should receive the configured registrations.
+            </param>
+            <param name="configuration">
+            The <see cref="T:Microsoft.Extensions.Configuration.IConfiguration"/> containing the configured registrations.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="builder"/> or <paramref name="configuration"/> is <see langword="null"/>.
+            </exception>
+            <exception cref="T:System.InvalidOperationException">
+            Thrown if there is any issue in parsing the component configuration into registrations.
+            </exception>
+            <remarks>
+            <para>
+            This is where the individually configured component registrations get added to the <paramref name="builder"/>.
+            The <c>components</c> collection from the <paramref name="configuration"/>
+            get processed into individual registrations with associated lifetime scope, name, etc.
+            </para>
+            <para>
+            You may influence the process by overriding this whole method or by
+            overriding individual parsing subroutines in this registrar.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:Autofac.Configuration.Core.ComponentRegistrar.EnumerateComponentServices(Microsoft.Extensions.Configuration.IConfiguration,System.Reflection.Assembly)">
+            <summary>
+            Reads configuration data for a component and enumerates the set
+            of configured services for the component.
+            </summary>
+            <param name="component">
+            The configuration data containing the component. The <c>services</c>
+            content will be read from this configuration object.
+            </param>
+            <param name="defaultAssembly">
+            The default assembly, if any, from which unqualified type names
+            should be resolved into types.
+            </param>
+            <returns>
+            An <seealso cref="T:System.Collections.Generic.IEnumerable`1"/> of <seealso cref="T:Autofac.Core.Service"/>
+            objects associated with the <paramref name="component" />.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="component" /> is <see langword="null" />.
+            </exception>
+        </member>
+        <member name="M:Autofac.Configuration.Core.ComponentRegistrar.RegisterComponentMetadata``2(Microsoft.Extensions.Configuration.IConfiguration,Autofac.Builder.IRegistrationBuilder{System.Object,``0,``1},System.Reflection.Assembly)">
+            <summary>
+            Reads configuration data for a component's metadata
+            and updates the component registration as needed.
+            </summary>
+            <param name="component">
+            The configuration data containing the component. The <c>metadata</c>
+            content will be read from this configuration object and used
+            as the metadata values.
+            </param>
+            <param name="registrar">
+            The component registration to update with metadata.
+            </param>
+            <param name="defaultAssembly">
+            The default assembly, if any, from which unqualified type names
+            should be resolved into types.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="component" /> or <paramref name="registrar" /> is <see langword="null" />.
+            </exception>
+        </member>
+        <member name="M:Autofac.Configuration.Core.ComponentRegistrar.RegisterComponentParameters``2(Microsoft.Extensions.Configuration.IConfiguration,Autofac.Builder.IRegistrationBuilder{System.Object,``0,``1})">
+            <summary>
+            Reads configuration data for a component's configured constructor parameter values
+            and updates the component registration as needed.
+            </summary>
+            <param name="component">
+            The configuration data containing the component. The <c>parameters</c>
+            content will be read from this configuration object and used
+            as the properties to inject.
+            </param>
+            <param name="registrar">
+            The component registration to update with constructor parameter injection.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="component" /> or <paramref name="registrar" /> is <see langword="null" />.
+            </exception>
+        </member>
+        <member name="M:Autofac.Configuration.Core.ComponentRegistrar.RegisterComponentProperties``2(Microsoft.Extensions.Configuration.IConfiguration,Autofac.Builder.IRegistrationBuilder{System.Object,``0,``1})">
+            <summary>
+            Reads configuration data for a component's configured property values
+            and updates the component registration as needed.
+            </summary>
+            <param name="component">
+            The configuration data containing the component. The <c>properties</c>
+            content will be read from this configuration object and used
+            as the properties to inject.
+            </param>
+            <param name="registrar">
+            The component registration to update with property injection.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="component" /> or <paramref name="registrar" /> is <see langword="null" />.
+            </exception>
+        </member>
+        <member name="M:Autofac.Configuration.Core.ComponentRegistrar.RegisterComponentServices``2(Microsoft.Extensions.Configuration.IConfiguration,Autofac.Builder.IRegistrationBuilder{System.Object,``0,``1},System.Reflection.Assembly)">
+            <summary>
+            Reads configuration data for a component's exposed services
+            and updates the component registration as needed.
+            </summary>
+            <param name="component">
+            The configuration data containing the component. The <c>services</c>
+            content will be read from this configuration object and used
+            as the services.
+            </param>
+            <param name="registrar">
+            The component registration to update with services.
+            </param>
+            <param name="defaultAssembly">
+            The default assembly, if any, from which unqualified type names
+            should be resolved into types.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="component" /> or <paramref name="registrar" /> is <see langword="null" />.
+            </exception>
+        </member>
+        <member name="M:Autofac.Configuration.Core.ComponentRegistrar.SetAutoActivate``2(Microsoft.Extensions.Configuration.IConfiguration,Autofac.Builder.IRegistrationBuilder{System.Object,``0,``1})">
+            <summary>
+            Sets the auto activation mode for the component.
+            </summary>
+            <param name="component">
+            The configuration data containing the component. The <c>autoActivate</c>
+            content will be read from this configuration object and used
+            to determine auto activation status.
+            </param>
+            <param name="registrar">
+            The component registration on which auto activation mode is being set.
+            </param>
+            <remarks>
+            <para>
+            By default, this implementation understands <see langword="null"/>, empty,
+            or <see langword="false"/> values (<c>false</c>, <c>0</c>, <c>no</c>)
+            to mean "not auto-activated" and <see langword="true"/>
+            values (<c>true</c>, <c>1</c>, <c>yes</c>) to mean "auto activation
+            should occur."
+            </para>
+            <para>
+            You may override this method to extend the available grammar for auto activation settings.
+            </para>
+            </remarks>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="registrar"/> is <see langword="null"/>.
+            </exception>
+            <exception cref="T:System.InvalidOperationException">
+            Thrown if the value for <c>autoActivate</c> is not part of the
+            recognized grammar.
+            </exception>
+        </member>
+        <member name="M:Autofac.Configuration.Core.ComponentRegistrar.SetComponentOwnership``2(Microsoft.Extensions.Configuration.IConfiguration,Autofac.Builder.IRegistrationBuilder{System.Object,``0,``1})">
+            <summary>
+            Sets the ownership model for the component.
+            </summary>
+            <param name="component">
+            The configuration data containing the component. The <c>ownership</c>
+            content will be read from this configuration object and used
+            to determine component ownership.
+            </param>
+            <param name="registrar">
+            The component registration on which component ownership is being set.
+            </param>
+            <remarks>
+            <para>
+            By default, this implementation understands <see langword="null"/> or empty
+            values to be "default ownership model"; <c>lifetime-scope</c> or <c>LifetimeScope</c>
+            is "owned by lifetime scope"; and <c>external</c> or <c>ExternallyOwned</c> is
+            "externally owned."
+            </para>
+            <para>
+            By default, this implementation understands the following grammar:
+            </para>
+            <list type="table">
+            <listheader>
+            <term>Values</term>
+            <description>Lifetime Scope</description>
+            </listheader>
+            <item>
+            <term><see langword="null"/>, empty</term>
+            <description>Default - no specified ownership model</description>
+            </item>
+            <item>
+            <term><c>lifetime-scope</c>, <c>LifetimeScope</c></term>
+            <description>Owned by lifetime scope</description>
+            </item>
+            <item>
+            <term><c>external</c>, <c>ExternallyOwned</c></term>
+            <description>Externally owned</description>
+            </item>
+            </list>
+            <para>
+            You may override this method to extend the available grammar for component ownership.
+            </para>
+            </remarks>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="registrar"/> is <see langword="null"/>.
+            </exception>
+            <exception cref="T:System.InvalidOperationException">
+            Thrown if the value for <c>ownership</c> is not part of the
+            recognized grammar.
+            </exception>
+        </member>
+        <member name="M:Autofac.Configuration.Core.ComponentRegistrar.SetInjectProperties``2(Microsoft.Extensions.Configuration.IConfiguration,Autofac.Builder.IRegistrationBuilder{System.Object,``0,``1})">
+            <summary>
+            Sets the property injection mode for the component.
+            </summary>
+            <param name="component">
+            The configuration data containing the component. The <c>injectProperties</c>
+            content will be read from this configuration object and used
+            to determine property injection status.
+            </param>
+            <param name="registrar">
+            The component registration on which the property injection mode is being set.
+            </param>
+            <remarks>
+            <para>
+            By default, this implementation understands <see langword="null"/>, empty,
+            or <see langword="false"/> values (<c>false</c>, <c>0</c>, <c>no</c>)
+            to mean "no property injection" and <see langword="true"/>
+            values (<c>true</c>, <c>1</c>, <c>yes</c>) to mean "property injection
+            should occur."
+            </para>
+            <para>
+            You may override this method to extend the available grammar for property injection settings.
+            </para>
+            </remarks>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="registrar"/> is <see langword="null"/>.
+            </exception>
+            <exception cref="T:System.InvalidOperationException">
+            Thrown if the value for <c>injectProperties</c> is not part of the
+            recognized grammar.
+            </exception>
+        </member>
+        <member name="M:Autofac.Configuration.Core.ComponentRegistrar.SetLifetimeScope``2(Microsoft.Extensions.Configuration.IConfiguration,Autofac.Builder.IRegistrationBuilder{System.Object,``0,``1})">
+            <summary>
+            Sets the lifetime scope for the component.
+            </summary>
+            <param name="component">
+            The configuration data containing the component. The <c>instanceScope</c>
+            content will be read from this configuration object and used
+            as the lifetime scope.
+            </param>
+            <param name="registrar">
+            The component registration on which the lifetime scope is being set.
+            </param>
+            <remarks>
+            <para>
+            By default, this implementation understands the following grammar:
+            </para>
+            <list type="table">
+            <listheader>
+            <term>Values</term>
+            <description>Lifetime Scope</description>
+            </listheader>
+            <item>
+            <term><see langword="null"/>, empty</term>
+            <description>Default - no specified scope</description>
+            </item>
+            <item>
+            <term><c>single-instance</c>, <c>SingleInstance</c></term>
+            <description>Singleton</description>
+            </item>
+            <item>
+            <term><c>instance-per-lifetime-scope</c>, <c>InstancePerLifetimeScope</c>, <c>per-lifetime-scope</c>, <c>PerLifetimeScope</c></term>
+            <description>One instance per nested lifetime scope</description>
+            </item>
+            <item>
+            <term><c>instance-per-dependency</c>, <c>InstancePerDependency</c>, <c>per-dependency</c>, <c>PerDependency</c></term>
+            <description>One instance for each resolution call</description>
+            </item>
+            <item>
+            <term><c>instance-per-request</c>, <c>InstancePerRequest</c>, <c>per-request</c>, <c>PerRequest</c></term>
+            <description>One instance per request lifetime scope</description>
+            </item>
+            </list>
+            <para>
+            You may override this method to extend the available grammar for lifetime scope.
+            </para>
+            </remarks>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="registrar"/> is <see langword="null"/>.
+            </exception>
+            <exception cref="T:System.InvalidOperationException">
+            Thrown if the value for lifetime scope is not part of the
+            recognized grammar.
+            </exception>
+        </member>
+        <member name="T:Autofac.Configuration.Core.ConfigurationExtensions">
+            <summary>
+            Extension methods for working with <see cref="T:Microsoft.Extensions.Configuration.IConfiguration"/>.
+            </summary>
+        </member>
+        <member name="M:Autofac.Configuration.Core.ConfigurationExtensions.DefaultAssembly(Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            Reads the default assembly information from configuration and
+            parses the assembly name into an assembly.
+            </summary>
+            <param name="configuration">
+            An <see cref="T:Microsoft.Extensions.Configuration.IConfiguration"/> from which the default assembly
+            should be read.
+            </param>
+            <returns>
+            An <see cref="T:System.Reflection.Assembly"/> if the default assembly is specified on
+            <paramref name="configuration"/>; or <see langword="null"/> if not.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="configuration"/> is <see langword="null"/>.
+            </exception>
+        </member>
+        <member name="M:Autofac.Configuration.Core.ConfigurationExtensions.GetAssembly(Microsoft.Extensions.Configuration.IConfiguration,System.String)">
+            <summary>
+            Reads an assembly name from configuration and parses the assembly name into an assembly.
+            </summary>
+            <param name="configuration">
+            An <see cref="T:Microsoft.Extensions.Configuration.IConfiguration"/> from which the default assembly
+            should be read.
+            </param>
+            <param name="key">
+            The <see cref="T:System.String"/> key in configuration where the assembly name
+            is specified.
+            </param>
+            <returns>
+            An <see cref="T:System.Reflection.Assembly"/> if the assembly is specified on
+            <paramref name="configuration"/>; or <see langword="null"/> if not.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="configuration"/> or <paramref name="key"/> is <see langword="null"/>.
+            </exception>
+            <exception cref="T:System.ArgumentException">
+            Thrown if <paramref name="key"/> is empty or whitespace.
+            </exception>
+        </member>
+        <member name="M:Autofac.Configuration.Core.ConfigurationExtensions.GetParameters(Microsoft.Extensions.Configuration.IConfiguration,System.String)">
+            <summary>
+            Converts configured parameter values into parameters that can be used
+            during object resolution.
+            </summary>
+            <param name="configuration">
+            The <see cref="T:Microsoft.Extensions.Configuration.IConfiguration"/> element that contains the component
+            with defined parameters.
+            </param>
+            <param name="key">
+            The <see cref="T:System.String"/> key indicating the sub-element with the
+            parameters. Usually this is <c>parameters</c>.
+            </param>
+            <returns>
+            An <see cref="T:System.Collections.Generic.IEnumerable`1"/> of <see cref="T:Autofac.Core.Parameter"/> values
+            that can be used during object resolution.
+            </returns>
+        </member>
+        <member name="M:Autofac.Configuration.Core.ConfigurationExtensions.GetProperties(Microsoft.Extensions.Configuration.IConfiguration,System.String)">
+            <summary>
+            Converts configured property values into parameters that can be used
+            during object resolution.
+            </summary>
+            <param name="configuration">
+            The <see cref="T:Microsoft.Extensions.Configuration.IConfiguration"/> element that contains the component
+            with defined properties.
+            </param>
+            <param name="key">
+            The <see cref="T:System.String"/> key indicating the sub-element with the
+            propeties. Usually this is <c>properties</c>.
+            </param>
+            <returns>
+            An <see cref="T:System.Collections.Generic.IEnumerable`1"/> of <see cref="T:Autofac.Core.Parameter"/> values
+            that can be used during object resolution.
+            </returns>
+        </member>
+        <member name="M:Autofac.Configuration.Core.ConfigurationExtensions.GetType(Microsoft.Extensions.Configuration.IConfiguration,System.String,System.Reflection.Assembly)">
+            <summary>
+            Loads a type by name.
+            </summary>
+            <param name="configuration">
+            The <see cref="T:Microsoft.Extensions.Configuration.IConfiguration"/> object containing the type value to load.
+            </param>
+            <param name="key">
+            Name of the <see cref="T:System.Type"/> to load. This may be a partial type name or a fully-qualified type name.
+            </param>
+            <param name="defaultAssembly">
+            The default <see cref="T:System.Reflection.Assembly"/> to use in type resolution if <paramref name="key"/>
+            is a partial type name.
+            </param>
+            <returns>
+            The resolved <see cref="T:System.Type"/> based on the specified name.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="configuration"/> is <see langword="null"/>.
+            </exception>
+            <exception cref="T:System.InvalidOperationException">
+            Thrown if the specified <paramref name="key"/> can't be resolved as a fully-qualified type name and
+            isn't a partial type name for a <see cref="T:System.Type"/> found in the <paramref name="defaultAssembly"/>.
+            </exception>
+        </member>
+        <member name="M:Autofac.Configuration.Core.ConfigurationExtensions.GetConfiguredParameterValue(Microsoft.Extensions.Configuration.IConfigurationSection)">
+            <summary>
+            Inspects a parameter/property value to determine if it's a scalar,
+            list, or dictionary property and casts it appropriately.
+            </summary>
+            <param name="value">
+            The <see cref="T:Microsoft.Extensions.Configuration.IConfigurationSection"/> object containing the parameter/property
+            value to parse.
+            </param>
+            <returns>
+            A value that can be type-converted and used during object resolution.
+            </returns>
+            <remarks>
+            <para>
+            The Microsoft configuration model code sees arrays (lists) the same
+            as a dictionary with numeric keys. We have to do some work to determine
+            how to store the parsed configuration values so they can be converted
+            appropriately at resolve time; and there's still an edge case where
+            someone actually wanted a <see cref="T:System.Collections.Generic.Dictionary`2"/> with
+            sequential, zero-based numeric keys.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:Autofac.Configuration.Core.ConfigurationExtensions.GetKeyName(System.String)">
+            <summary>
+            Gets the simple configuration key name from a full, colon-delimited
+            configuration key name.
+            </summary>
+            <param name="fullKey">The full configuration key name, like <c>configuration:full:key</c>.</param>
+            <returns>
+            The last segment in the colon-delimited full key name, like <c>key</c>.
+            </returns>
+        </member>
+        <member name="T:Autofac.Configuration.Core.ConfigurationRegistrar">
+            <summary>
+            Default service for adding configured registrations to a container.
+            </summary>
+            <remarks>
+            <para>
+            This default implementation of <see cref="T:Autofac.Configuration.IConfigurationRegistrar"/>
+            processes <see cref="T:Microsoft.Extensions.Configuration.IConfiguration"/> contents into registrations for
+            a <see cref="T:Autofac.ContainerBuilder"/>. You may derive and override to extend the functionality
+            or you may implement your own <see cref="T:Autofac.Configuration.IConfigurationRegistrar"/>.
+            </para>
+            </remarks>
+            <seealso cref="T:Autofac.Configuration.IConfigurationRegistrar"/>
+        </member>
+        <member name="M:Autofac.Configuration.Core.ConfigurationRegistrar.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Autofac.Configuration.Core.ConfigurationRegistrar"/> class.
+            </summary>
+        </member>
+        <member name="M:Autofac.Configuration.Core.ConfigurationRegistrar.#ctor(Autofac.Configuration.IComponentRegistrar,Autofac.Configuration.IModuleRegistrar)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Autofac.Configuration.Core.ConfigurationRegistrar"/> class.
+            </summary>
+            <param name="componentRegistrar">
+            The <see cref="T:Autofac.Configuration.IComponentRegistrar"/> that will be used to parse
+            configuration values into component registrations.
+            </param>
+            <param name="moduleRegistrar">
+            The <see cref="T:Autofac.Configuration.IModuleRegistrar"/> that will be used to parse
+            configuration values into module registrations.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="componentRegistrar" /> or <paramref name="moduleRegistrar" /> is <see langword="null" />.
+            </exception>
+        </member>
+        <member name="P:Autofac.Configuration.Core.ConfigurationRegistrar.ComponentRegistrar">
+            <summary>
+            Gets the component registration parser.
+            </summary>
+            <value>
+            The <see cref="T:Autofac.Configuration.IComponentRegistrar"/> that will be used to parse
+            configuration values into component registrations.
+            </value>
+        </member>
+        <member name="P:Autofac.Configuration.Core.ConfigurationRegistrar.ModuleRegistrar">
+            <summary>
+            Gets the module registration parser.
+            </summary>
+            <value>
+            The <see cref="T:Autofac.Configuration.IModuleRegistrar"/> that will be used to parse
+            configuration values into module registrations.
+            </value>
+        </member>
+        <member name="M:Autofac.Configuration.Core.ConfigurationRegistrar.RegisterConfiguration(Autofac.ContainerBuilder,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            Registers the contents of a configuration section into a container builder.
+            </summary>
+            <param name="builder">
+            The <see cref="T:Autofac.ContainerBuilder"/> that should receive the configured registrations.
+            </param>
+            <param name="configuration">
+            The <see cref="T:Microsoft.Extensions.Configuration.IConfiguration"/> containing the configured registrations.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="builder"/> or <paramref name="configuration"/> is <see langword="null"/>.
+            </exception>
+            <remarks>
+            <para>
+            This method is the primary entry point to configuration section registration. From here,
+            the various modules, components, and referenced files get registered. You may override
+            any of those behaviors for a custom registrar if you wish to extend registration behavior.
+            </para>
+            </remarks>
+        </member>
+        <member name="T:Autofac.Configuration.Core.ModuleRegistrar">
+            <summary>
+            Default module configuration processor.
+            </summary>
+            <seealso cref="T:Autofac.Configuration.IModuleRegistrar"/>
+        </member>
+        <member name="M:Autofac.Configuration.Core.ModuleRegistrar.RegisterConfiguredModules(Autofac.ContainerBuilder,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            Registers individual configured modules into a container builder.
+            </summary>
+            <param name="builder">
+            The <see cref="T:Autofac.ContainerBuilder"/> that should receive the configured registrations.
+            </param>
+            <param name="configuration">
+            The <see cref="T:Microsoft.Extensions.Configuration.IConfiguration"/> containing the configured registrations.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="builder"/> or <paramref name="configuration"/> is <see langword="null"/>.
+            </exception>
+            <exception cref="T:System.InvalidOperationException">
+            Thrown if there is any issue in parsing the module configuration into registrations.
+            </exception>
+            <remarks>
+            <para>
+            This is where the individually configured component registrations get added to the <paramref name="builder"/>.
+            The <c>modules</c> collection from the <paramref name="configuration"/>
+            get processed into individual modules which are instantiated and activated inside the <paramref name="builder"/>.
+            </para>
+            </remarks>
+        </member>
+        <member name="P:Autofac.Configuration.ConfigurationResources.ArgumentMayNotBeEmpty">
+            <summary>
+            The {0} may not be empty.
+            </summary>
+        </member>
+        <member name="M:Autofac.Configuration.ConfigurationResources.FormatArgumentMayNotBeEmpty(System.Object)">
+            <summary>
+            The {0} may not be empty.
+            </summary>
+        </member>
+        <member name="P:Autofac.Configuration.ConfigurationResources.ServiceTypeMustBeSpecified">
+            <summary>
+            If 'name' is specified, 'service' must also be specified (component name='{0}'.)
+            </summary>
+        </member>
+        <member name="M:Autofac.Configuration.ConfigurationResources.FormatServiceTypeMustBeSpecified(System.Object)">
+            <summary>
+            If 'name' is specified, 'service' must also be specified (component name='{0}'.)
+            </summary>
+        </member>
+        <member name="P:Autofac.Configuration.ConfigurationResources.TypeConversionUnsupported">
+            <summary>
+            Unable to convert object of type '{0}' to type '{1}'.
+            </summary>
+        </member>
+        <member name="M:Autofac.Configuration.ConfigurationResources.FormatTypeConversionUnsupported(System.Object,System.Object)">
+            <summary>
+            Unable to convert object of type '{0}' to type '{1}'.
+            </summary>
+        </member>
+        <member name="P:Autofac.Configuration.ConfigurationResources.TypeConverterAttributeTypeNotConverter">
+            <summary>
+            The type '{0}' specified in the TypeConverterAttribute is not a TypeConverter.
+            </summary>
+        </member>
+        <member name="M:Autofac.Configuration.ConfigurationResources.FormatTypeConverterAttributeTypeNotConverter(System.Object)">
+            <summary>
+            The type '{0}' specified in the TypeConverterAttribute is not a TypeConverter.
+            </summary>
+        </member>
+        <member name="P:Autofac.Configuration.ConfigurationResources.TypeNotFound">
+            <summary>
+            The type '{0}' could not be found. It may require assembly qualification, e.g. "MyType, MyAssembly".
+            </summary>
+        </member>
+        <member name="M:Autofac.Configuration.ConfigurationResources.FormatTypeNotFound(System.Object)">
+            <summary>
+            The type '{0}' could not be found. It may require assembly qualification, e.g. "MyType, MyAssembly".
+            </summary>
+        </member>
+        <member name="P:Autofac.Configuration.ConfigurationResources.UnrecognisedBoolean">
+            <summary>
+            The value '{0}' is not valid for a Boolean setting. Valid values are 'true' and 'false'.
+            </summary>
+        </member>
+        <member name="M:Autofac.Configuration.ConfigurationResources.FormatUnrecognisedBoolean(System.Object)">
+            <summary>
+            The value '{0}' is not valid for a Boolean setting. Valid values are 'true' and 'false'.
+            </summary>
+        </member>
+        <member name="P:Autofac.Configuration.ConfigurationResources.UnrecognisedOwnership">
+            <summary>
+            The value '{0}' is not valid for the ownership setting. Valid values are 'lifetime-scope' (the default) and 'external'.
+            </summary>
+        </member>
+        <member name="M:Autofac.Configuration.ConfigurationResources.FormatUnrecognisedOwnership(System.Object)">
+            <summary>
+            The value '{0}' is not valid for the ownership setting. Valid values are 'lifetime-scope' (the default) and 'external'.
+            </summary>
+        </member>
+        <member name="P:Autofac.Configuration.ConfigurationResources.UnrecognisedScope">
+            <summary>
+            The value '{0}' is not valid for the instance scope setting. Valid values are 'single-instance', 'per-dependency' (the default), 'per-lifetime-scope', and 'per-request'.
+            </summary>
+        </member>
+        <member name="P:Autofac.Configuration.ConfigurationResources.DictionaryKeyMayNotBeNullOrEmpty">
+            <summary>
+            Key cannot be null or empty in a dictionary parameter.
+            </summary>
+        </member>
+        <member name="M:Autofac.Configuration.ConfigurationResources.FormatUnrecognisedScope(System.Object)">
+            <summary>
+            The value '{0}' is not valid for the instance scope setting. Valid values are 'single-instance', 'per-dependency' (the default), 'per-lifetime-scope', and 'per-request'.
+            </summary>
+        </member>
+        <member name="M:Autofac.Configuration.Util.ConfiguredListParameter.ListTypeConverter.GetInstantiableDictionaryType(System.Type)">
+            <summary>
+            Handles type determination for the case where the dictionary
+            has numeric/ordinal keys.
+            </summary>
+            <param name="destinationType">
+            The type to which the list content should be converted.
+            </param>
+            <returns>
+            A dictionary type where the key can be numeric.
+            </returns>
+        </member>
+        <member name="M:Autofac.Configuration.Util.ConfiguredListParameter.ListTypeConverter.GetInstantiableListType(System.Type)">
+            <summary>
+            Handles type determination list conversion.
+            </summary>
+            <param name="destinationType">
+            The type to which the list content should be converted.
+            </param>
+            <returns>
+            A list type compatible with the data values.
+            </returns>
+        </member>
+        <member name="T:Autofac.Configuration.Util.ReflectionExtensions">
+            <summary>
+            Extension methods for reflection-related types.
+            </summary>
+        </member>
+        <member name="M:Autofac.Configuration.Util.ReflectionExtensions.TryGetDeclaringProperty(System.Reflection.ParameterInfo,System.Reflection.PropertyInfo@)">
+            <summary>
+            Maps from a property-set-value parameter to the declaring property.
+            </summary>
+            <param name="pi">Parameter to the property setter.</param>
+            <param name="prop">The property info on which the setter is specified.</param>
+            <returns>True if the parameter is a property setter.</returns>
+        </member>
+        <member name="T:Autofac.Configuration.Util.StringExtensions">
+            <summary>
+            Extension methods for parsing string values from configuration.
+            </summary>
+        </member>
+        <member name="M:Autofac.Configuration.Util.StringExtensions.ToFlexibleBoolean(System.String)">
+            <summary>
+            Uses a flexible parsing routine to convert a text value into
+            a <see cref="T:System.Boolean"/>.
+            </summary>
+            <param name="value">
+            The value to parse into a <see cref="T:System.Boolean"/>.
+            </param>
+            <returns>
+            <see langword="true" /> or <see langword="false" /> based on the
+            content of the <paramref name="value" />.
+            </returns>
+            <exception cref="T:System.InvalidOperationException">
+            Thrown if <paramref name="value" /> can't be parsed into a <see cref="T:System.Boolean"/>.
+            </exception>
+        </member>
+        <member name="T:Autofac.Configuration.Util.TypeManipulation">
+            <summary>
+            Utilities for converting string configuration values into strongly-typed objects.
+            </summary>
+        </member>
+        <member name="M:Autofac.Configuration.Util.TypeManipulation.ChangeToCompatibleType(System.Object,System.Type,System.Reflection.ParameterInfo)">
+            <summary>
+            Converts an object to a type compatible with a given parameter.
+            </summary>
+            <param name="value">The object value to convert.</param>
+            <param name="destinationType">The destination <see cref="T:System.Type"/> to which <paramref name="value"/> should be converted.</param>
+            <param name="memberInfo">The parameter for which the <paramref name="value"/> is being converted.</param>
+            <returns>
+            An <see cref="T:System.Object"/> of type <paramref name="destinationType"/>, converted using
+            type converters specified on <paramref name="memberInfo"/> if available. If <paramref name="value"/>
+            is <see langword="null"/> then the output will be <see langword="null"/> for reference
+            types and the default value for value types.
+            </returns>
+            <exception cref="T:System.InvalidOperationException">
+            Thrown if conversion of the value fails.
+            </exception>
+        </member>
+        <member name="M:Autofac.Configuration.Util.TypeManipulation.ChangeToCompatibleType(System.Object,System.Type,System.Reflection.MemberInfo)">
+            <summary>
+            Converts an object to a type compatible with a given parameter.
+            </summary>
+            <param name="value">The object value to convert.</param>
+            <param name="destinationType">The destination <see cref="T:System.Type"/> to which <paramref name="value"/> should be converted.</param>
+            <param name="memberInfo">The parameter for which the <paramref name="value"/> is being converted.</param>
+            <returns>
+            An <see cref="T:System.Object"/> of type <paramref name="destinationType"/>, converted using
+            type converters specified on <paramref name="memberInfo"/> if available. If <paramref name="value"/>
+            is <see langword="null"/> then the output will be <see langword="null"/> for reference
+            types and the default value for value types.
+            </returns>
+            <exception cref="T:System.InvalidOperationException">
+            Thrown if conversion of the value fails.
+            </exception>
+        </member>
+        <member name="M:Autofac.Configuration.Util.TypeManipulation.ChangeToCompatibleType(System.Object,System.Type,System.ComponentModel.TypeConverterAttribute)">
+            <summary>
+            Converts an object to a type compatible with a given parameter.
+            </summary>
+            <param name="value">The object value to convert.</param>
+            <param name="destinationType">The destination <see cref="T:System.Type"/> to which <paramref name="value"/> should be converted.</param>
+            <param name="converterAttribute">A <see cref="T:System.ComponentModel.TypeConverterAttribute"/>, if available, specifying the type of converter to use.<paramref name="value"/> is being converted.</param>
+            <returns>
+            An <see cref="T:System.Object"/> of type <paramref name="destinationType"/>, converted using
+            any type converters specified in <paramref name="converterAttribute"/> if available. If <paramref name="value"/>
+            is <see langword="null"/> then the output will be <see langword="null"/> for reference
+            types and the default value for value types.
+            </returns>
+            <exception cref="T:System.InvalidOperationException">
+            Thrown if conversion of the value fails.
+            </exception>
+        </member>
+        <member name="M:Autofac.Configuration.Util.TypeManipulation.GetTypeConverterFromName(System.String)">
+            <summary>
+            Instantiates a type converter from its type name.
+            </summary>
+            <param name="converterTypeName">
+            The name of the <see cref="T:System.Type"/> of the <see cref="T:System.ComponentModel.TypeConverter"/>.
+            </param>
+            <returns>
+            The instantiated <see cref="T:System.ComponentModel.TypeConverter"/>.
+            </returns>
+            <exception cref="T:System.InvalidOperationException">
+            Thrown if <paramref name="converterTypeName"/> does not correspond
+            to a <see cref="T:System.ComponentModel.TypeConverter"/>
+            </exception>
+        </member>
+    </members>
+</doc>
