@@ -1,0 +1,23 @@
+﻿@model System.Collections.Generic.IEnumerable<DI.MVC.Customer>
+
+@{
+    Layout = null;
+    var grid = new WebGrid(Model);
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Index</title>
+</head>
+<body>
+    <div>
+        @grid.GetHtml()
+    </div>
+    <br /><br />
+    <div>
+        @Html.ActionLink("Home", "Index")
+    </div>
+</body>
+</html>

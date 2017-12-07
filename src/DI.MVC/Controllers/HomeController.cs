@@ -8,23 +8,28 @@ namespace DI.MVC.Controllers
 {
     public class HomeController : Controller
     {
+        public HomeController(ICustomerRepository customerRepository)
+        {
+            _CustomerRepository = customerRepository;
+        }
+
+        ICustomerRepository _CustomerRepository;
+
         public ActionResult Index()
         {
             return View();
         }
 
-        public ActionResult About()
+        public ActionResult Customers()
         {
-            ViewBag.Message = "Your application description page.";
-
-            return View();
+            IEnumerable<Customer> customers = _CustomerRepository.GetAll();
+            return View(customers);
         }
 
-        public ActionResult Contact()
+        public ActionResult Customer(int id)
         {
-            ViewBag.Message = "Your contact page.";
-
-            return View();
+            Customer customer = _CustomerRepository.GetById(id);
+            return View(customer);
         }
     }
 }

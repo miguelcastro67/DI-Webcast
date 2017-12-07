@@ -1,0 +1,28 @@
+﻿@model DI.MVC.Customer
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Index</title>
+</head>
+<body>
+    <div>
+        @Html.DisplayFor(m => m.Name)
+    </div>
+    <div>
+        @Html.DisplayFor(m => m.Email)
+    </div>
+    <div>
+        @Html.DisplayFor(m => m.Twitter)
+    </div>
+    <br /><br />
+    <div>
+        @Html.ActionLink("Home", "Index")
+    </div>
+</body>
+</html>
